@@ -19,5 +19,40 @@
             </div>
         </div>
     </div>
+    <form action="/store" method="post" enctype="multipart/form-data">
+        {{csrf_field()}}
+        <div class="form-group">
+            <label for="name"></label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Name and Lastname">
+        </div>
+        <div class="form-group">
+            <label for="spec"></label>
+            <input type="text" class="form-control" id="spec" name="spec" placeholder="Spec">
+        </div>
+        <div class="form-group">
+            <label for="service"></label>
+            <input type="text" class="form-control" id="service" name="service" placeholder="Service">
+        </div>
+        <div class="form-group">
+            <label for="city"></label>
+            <input type="text" class="form-control" id="city" name="city" placeholder="City">
+        </div>
+        <select class="form-select form-select-sm form-control"  name="gender" aria-label=".form-select-sm example">
+            <option selected>Open this select menu</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+
+        </select>
+
+
+        <div class="form-group">
+            <label for="image"></label>
+            <input type="file" class="btn" id="image" name="image">
+        </div>
+        <div class="form-group d-flex justify-content-center m-5">
+            <button type="submit" class="btn btn-secondary rounded">Add Service</button>
+        </div>
+    </form>
+
 </div>
 @endsection
