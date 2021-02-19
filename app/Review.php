@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
-    protected $fillable = ['name', 'spec', 'service', 'city', 'gender', 'image', 'ratio_id', 'user_id'];
+    protected $fillable = ['name', 'spec', 'service', 'city', 'gender_id', 'image', 'ratio_id', 'user_id'];
 
     public function ratings(){
 
-        return $this->hasMany(Rating::class);
+        return $this->hasMany(Rating::class, 'review_id');
     }
 }

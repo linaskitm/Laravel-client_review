@@ -37,11 +37,12 @@
             <label for="city"></label>
             <input type="text" class="form-control" id="city" name="city" placeholder="City">
         </div>
-        <select class="form-select form-select-sm form-control"  name="gender" aria-label=".form-select-sm example">
+        <select class="form-select form-select-sm form-control" name="gender_id" aria-label=".form-select-sm example">
             <option selected>Open this select menu</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-
+            {{$genders = \App\Gender::all()}}
+            @foreach($genders as $gender)
+            <option value={{$gender->id}}>{{$gender->gender}}</option>
+            @endforeach
         </select>
 
 
@@ -51,6 +52,19 @@
         </div>
         <div class="form-group d-flex justify-content-center m-5">
             <button type="submit" class="btn btn-secondary rounded">Add Service</button>
+        </div>
+    </form>
+
+    <form action="/storegender" method="post">
+        {{csrf_field()}}
+        <select class="form-select form-select-sm form-control"  name="gender" aria-label=".form-select-sm example">
+            <option selected>Open this select menu</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+        <div class="form-group d-flex justify-content-center m-5">
+            <button type="submit" class="btn btn-secondary rounded">Add Gender</button>
         </div>
     </form>
 

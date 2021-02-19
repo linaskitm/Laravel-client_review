@@ -4,70 +4,74 @@
 
 <div class="container">
 
-    <div class="row justify-content-center">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Spec
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    @foreach($specArray as $spec)
-                        <li><a class="dropdown-item" href="#">{{$spec}}</a></li>
-                    @endforeach
-                </ul>
+    {{--           search bar with dropdowns           --}}
+    <form action="/search">
+        <div class="row">
+            <div class="col-md-2">
+                <input class="form-control form-control-sm" type="search" name="search" value="">
             </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                Service
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                @foreach($serviceArray as $service)
-                    <li><a class="dropdown-item" href="#">{{$service}}</a></li>
-                @endforeach
-            </ul>
+
+            <div class="col-md-2 col-2">
+                <select name="spec" class="form-control form-control-sm" value="">
+                    <option selected disabled>Spec</option>
+                    @foreach($specArray as $item)
+                        <option value="{{$item}}">{{$item}}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-2 col-2">
+                <select name="service" class="form-control form-control-sm" value="">
+                    <option selected disabled>Service</option>
+                    @foreach($serviceArray as $item)
+                        <option value="{{$item}}">{{$item}}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-2 col-2">
+                <select name="city" class="form-control form-control-sm" value="">
+                    <option selected disabled>City</option>
+                    @foreach($cityArray as $item)
+                        <option value="{{$item}}">{{$item}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2 col-2">
+                <select name="gender" class="form-control form-control-sm" value="">
+                    <option selected disabled>Gender</option>
+                    @foreach($genders as $item)
+                        <option value="{{$item->id}}">{{$item->gender}}</option>
+                    @endforeach
+                    >
+                </select>
+            </div>
+            <div class="col-md-2 col-2">
+                <select name="rating" class="form-control form-control-sm" value="">
+                    <option selected disabled>Ratings</option>
+                    @foreach($ratio as $item)
+                        @foreach($item->ratings()->get('rating') as $i)
+                        <option value="{{$i->rating}}">{{$i->rating}}</option>
+                        @endforeach
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-2 col-2">
+                <button type="submit" class="w-100 btn btn-sm bg-blue">Filter</button>
+            </div>
         </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                City
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                @foreach($cityArray as $city)
-                    <li><a class="dropdown-item" href="#">{{$city}}</a></li>
-                @endforeach
-            </ul>
-        </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                Gender
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    </form>
 
-                    @foreach($genderArray as $gender)
-
-                    <li><a class="dropdown-item" href="#">{{$gender}}</a></li>
-
-
-                @endforeach
-            </ul>
-        </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                Ratings
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-        </div>
-    </div>
-
-
-
+{{--           List displayed from databse           --}}
     @foreach($reviews as $review)
+
     <div class="row justify-content-center pt-5">
         <div class="col-md-8">
             <div class="row justify-content-center">
-                <div class="col-2">Image</div>
+                <div class="col-2">
+                    <img src="{{asset($review->image)}}">
+                </div>
                 <div class="col-6">
                     <p>Vardas: {{$review->name}} </p>
                     <p>Spec: {{$review->spec}}</p>
@@ -95,9 +99,7 @@
                         <option value="4">Four</option>
                         <option value="5">Five</option>
                     </select>
-
                             <button type="submit" class="btn btn-secondary rounded">Add Rating</button>
-
                     </form>
                     @endif
                 </div>
