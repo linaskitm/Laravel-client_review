@@ -13,7 +13,7 @@ class ReviewController extends Controller
 {
     public function __construct(){
 
-        $this->middleware('auth', ['except' => ['index', 'searchBar']]);
+        $this->middleware('auth', ['except' => ['index', 'searchBar', 'getByRate']]);
     }
     public function index(){
         $reviews = Review::all();
@@ -87,10 +87,7 @@ class ReviewController extends Controller
         ]);
         return redirect('/');
     }
-    public function storeUpdateWithRatio(Request $request, Rating $rating){
-        Review::where('id', $review->id)->insert('ratio_id', $request->ratio);
-        return redirect('/');
-    }
+
 
     public function storeRating(){
         Rating::create([
@@ -111,7 +108,7 @@ class ReviewController extends Controller
             $reviews = DB::table('finalrates')
                 ->join('reviews', 'finalrates.finalreview', '=', 'reviews.id')
                 ->select('reviews.id', 'reviews.name', 'reviews.spec', 'reviews.service', 'reviews.city','reviews.image', 'finalrates.finalrate')
-                ->where('finalrates.finalreview', $finalrate->id)
+                ->where('finalrates.finalreview', $finalrate->finalreview)
                 ->get();
 //            dd($reviews);
         $ratio = Review::with('ratings')->get();
