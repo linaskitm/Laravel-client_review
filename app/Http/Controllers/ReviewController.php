@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Finalrate;
 use App\Gender;
 use App\Rating;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,7 @@ class ReviewController extends Controller
 {
     public function __construct(){
 
-        $this->middleware('auth', ['except' => ['index', 'searchName']]);
+        $this->middleware('auth', ['except' => ['index', 'searchBar']]);
     }
     public function index(){
         $reviews = Review::all();
@@ -40,6 +41,7 @@ class ReviewController extends Controller
         }
 
         $genders = Gender::all();
+        $finalrates = Finalrate::all();
 
         $specArray =[];
         foreach ($reviews as $item){
@@ -59,7 +61,7 @@ class ReviewController extends Controller
         }
         $cityArray = array_unique($cityArray);
 
-        return view('reviews', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders'));
+        return view('reviews', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders', 'finalrates'));
     }
 
     public function store(Request $request){
@@ -85,6 +87,10 @@ class ReviewController extends Controller
         ]);
         return redirect('/');
     }
+    public function storeUpdateWithRatio(Request $request, Rating $rating){
+        Review::where('id', $review->id)->insert('ratio_id', $request->ratio);
+        return redirect('/');
+    }
 
     public function storeRating(){
         Rating::create([
@@ -94,24 +100,22 @@ class ReviewController extends Controller
         ]);
         return redirect('/');
     }
-    public function storeGender(){
-        Gender::create([
-           'gender' => request('gender'),
-            'user_id'=> Auth::id()
+    public function storeFinalRate(){
+        Finalrate::create([
+            'finalrate'=>request('finalrate'),
+            'finalreview'=>request('finalreview')
         ]);
-        return redirect('/home');
+        return redirect('/');
     }
-
-    public function searchBar(Request $request){
-        $reviews = Review::where('name', 'LIKE', '%'.request('search').'%')
-            ->where('city', 'LIKE', '%'.request('city').'%')
-            ->where('service', 'LIKE' ,'%'.request('service').'%' )
-            ->where('spec', 'LIKE' ,'%'.request('spec').'%' )
-            ->where('gender_id', 'LIKE' ,'%'.request('gender').'%' )->get();
-//
-
-
+    public function getByRate(Finalrate $finalrate){
+            $reviews = DB::table('finalrates')
+                ->join('reviews', 'finalrates.finalreview', '=', 'reviews.id')
+                ->select('reviews.id', 'reviews.name', 'reviews.spec', 'reviews.service', 'reviews.city','reviews.image', 'finalrates.finalrate')
+                ->where('finalrates.finalreview', $finalrate->id)
+                ->get();
+//            dd($reviews);
         $ratio = Review::with('ratings')->get();
+        $finalrates = Finalrate::all();
 
         $reviewsForNav = Review::all();
         $specArray =[];
@@ -134,7 +138,53 @@ class ReviewController extends Controller
 
         $genders = Gender::all();
 
-        return view('reviewby', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders'));
+
+        return view('reviewbyfinal', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders', 'finalrates'));
+    }
+
+    public function storeGender(){
+        Gender::create([
+           'gender' => request('gender'),
+            'user_id'=> Auth::id()
+        ]);
+
+        return redirect('/home');
+    }
+
+    public function searchBar(Request $request){
+        $reviews = Review::where('name', 'LIKE', '%'.request('search').'%')
+            ->where('city', 'LIKE', '%'.request('city').'%')
+            ->where('service', 'LIKE' ,'%'.request('service').'%' )
+            ->where('spec', 'LIKE' ,'%'.request('spec').'%' )
+            ->where('gender_id', 'LIKE' ,'%'.request('gender').'%' )->get();
+//
+
+
+        $ratio = Review::with('ratings')->get();
+        $finalrates = Finalrate::all();
+
+        $reviewsForNav = Review::all();
+        $specArray =[];
+        foreach ($reviewsForNav as $item){
+            array_push($specArray, $item->spec);
+        }
+        $specArray = array_unique($specArray);
+
+        $serviceArray = [];
+        foreach ($reviewsForNav as $item){
+            array_push($serviceArray, $item->service);
+        }
+        $serviceArray = array_unique($serviceArray);
+
+        $cityArray = [];
+        foreach ($reviewsForNav as $item){
+            array_push($cityArray, $item->city);
+        }
+        $cityArray = array_unique($cityArray);
+
+        $genders = Gender::all();
+
+        return view('reviewby', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders', 'finalrates'));
     }
 
 

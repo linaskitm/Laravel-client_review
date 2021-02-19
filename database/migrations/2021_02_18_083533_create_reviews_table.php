@@ -21,7 +21,7 @@ class CreateReviewsTable extends Migration
             $table->string('city');
             $table->integer('gender_id');
             $table->string('image')->nullable();
-            $table->integer('ratio_id')->nullable();
+            $table->double('ratio_id')->nullable();
             $table->integer('user_id');
             $table->timestamps();
         });

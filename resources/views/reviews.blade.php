@@ -46,22 +46,29 @@
                     >
                 </select>
             </div>
-            <div class="col-md-2 col-2">
-                <select name="rating" class="form-control form-control-sm" value="">
-                    <option selected disabled>Ratings</option>
-                    @foreach($ratio as $item)
-                        @foreach($item->ratings()->get('rating') as $i)
-                        <option value="{{$i->rating}}">{{$i->rating}}</option>
-                        @endforeach
-                    @endforeach
-                </select>
-            </div>
+
 
             <div class="col-md-2 col-2">
-                <button type="submit" class="w-100 btn btn-sm bg-blue">Filter</button>
+                <button type="submit" class="w-100 btn btn-sm bg-blue">Search</button>
             </div>
         </div>
     </form>
+
+
+        <div class="row pt-2">
+            <div class="col-md-1 col-1">
+               <ul class="list-group">
+                        @foreach($finalrates as $finalrate)
+
+                               <li class="list-group-item"><a href="/getbyrate/{{$finalrate->id}}">{{$finalrate->finalrate}}</a></li>
+
+                        @endforeach
+
+                    </ul>
+            </div>
+
+        </div>
+
 
 {{--           List displayed from databse           --}}
     @foreach($reviews as $review)
@@ -87,6 +94,18 @@
                             @endif
                         @endforeach
                     </p>
+                        <form action="/storefinalrate" method="post">
+                            {{csrf_field()}}
+                            @foreach($ratio as $item)
+                                @if($review->id == $item->id)
+                                    <input type="number" value="{{$review->id}}" name="finalreview">
+                                    <input type="number" value="{{$item->ratings()->avg('rating')}}" name="finalrate">
+                                @endif
+                            @endforeach
+                                <button type="submit" class="btn btn-secondary rounded">Add Rating to database</button>
+                        </form>
+
+
                     @if(Auth::check())
                     <form action="/storeratings" method="post">
                         {{csrf_field()}}

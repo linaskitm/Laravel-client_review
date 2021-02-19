@@ -22,6 +22,9 @@ Route::post('/store', 'ReviewController@store');
 Route::post('/storeratings', 'ReviewController@storeRating');
 Route::post('/storegender', 'ReviewController@storeGender');
 
+Route::post('/storefinalrate', 'ReviewController@storeFinalRate');
+
 Route::get('/', 'ReviewController@index');
 
 Route::get('/search', 'ReviewController@searchBar');
+Route::get('/getbyrate/{finalrate}', 'ReviewController@getByRate');
