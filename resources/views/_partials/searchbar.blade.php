@@ -53,7 +53,7 @@
         <ul class="list-group">
             @foreach($finalrates as $finalrate)
 
-                <li class="list-group-item "><a class="text-muted" href="/getbyrate/{{$finalrate->id}}">{{$finalrate->finalrate}}</a></li>
+                <li class="list-group-item "><a class="text-muted" href="/getbyrate/{{$finalrate->id}}">{{$finalrate->finalrate}} <i class="fas fa-star text-warning"> </i></a></li>
 
             @endforeach
 
