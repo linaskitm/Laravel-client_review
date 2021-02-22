@@ -12,4 +12,9 @@ class Review extends Model
 
         return $this->hasMany(Rating::class, 'review_id');
     }
+
+    public function finalratings(){
+
+        return $this->hasMany(Finalrate::class);
+    }
 }

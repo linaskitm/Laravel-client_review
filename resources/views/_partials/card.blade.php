@@ -7,10 +7,10 @@
                     <img src="{{asset($review->image)}}">
                 </div>
                 <div class="col-6">
-                    <p>Vardas: {{$review->name}} </p>
-                    <p>Spec: {{$review->spec}}</p>
-                    <p>Servisas: {{$review->service}}</p>
-                    <p>Miestas: {{$review->city}}</p>
+                    <p class="m-0">Vardas: {{$review->name}} </p>
+                    <p class="m-0">Spec: {{$review->spec}}</p>
+                    <p class="m-0">Servisas: {{$review->service}}</p>
+                    <p class="m-0">Miestas: {{$review->city}}</p>
                 </div>
                 <div class="col">
                     <p>Ratings:
@@ -19,7 +19,6 @@
                             @if($review->id == $item->id)
 
                                 {{$item->ratings()->avg('rating')}}
-
 
                                     @for ($i = 0; $i < 5; $i++)
                                         @if (floor($item->ratings()->avg('rating')) - $i >= 1)
@@ -40,29 +39,23 @@
                         @endforeach
                     </p>
                     @if(Auth::check())
-                        <form action="/storefinalrate" method="post">
-                            {{csrf_field()}}
-                            @foreach($ratio as $item)
-                                @if($review->id == $item->id)
-                                    <input type="checkbox" disabled hidden value="{{$review->id}}" name="finalreview">
-                                    <input type="checkbox" disabled hidden value="{{$item->ratings()->avg('rating')}}" name="finalrate">
-                                @endif
-                            @endforeach
-                            <button type="submit" class="btn btn-secondary rounded">Add rate to db</button>
-                        </form>
-
                         <form action="/storeratings" method="post">
                             {{csrf_field()}}
-                            <input type="checkbox" disabled hidden value="{{$review->id}}" id="review_id" name="review_id" placeholder="{{$review->id}}">
-                            <select class="form-select"  name="rating"multiple aria-label="multiple select example">
-                                <option selected>Rate this</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                            <button type="submit" class="btn btn-secondary rounded">Rate</button>
+                            <div class="form-group wrapper">
+                                <input class="input" type="text" name="review_id" value="{{$review->id}}" hidden>
+                                <input class="input" type="radio" id="r1" name="rating" value="1">
+                                <label for="r1">1</label>
+                                <input class="input" type="radio" id="r2" name="rating" value="2">
+                                <label for="r2">2</label>
+                                <input class="input" type="radio" id="r3" name="rating" value="3">
+                                <label for="r3">3</label>
+                                <input class="input" type="radio" id="r4" name="rating" value="4">
+                                <label for="r4">4</label>
+                                <input class="input" type="radio" id="r5" name="rating" value="5">
+                                <label for="r5">5</label>
+                                <button type="submit" class="btn  btn-success btn-sm">Rate</button>
+                            </div>
+
                         </form>
                     @endif
                 </div>

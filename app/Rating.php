@@ -8,8 +8,9 @@ class Rating extends Model
 {
     protected $fillable = ['rating', 'review_id', 'user_id'];
 
-    public function rewiewsByRate(){
-        return $this->belongsTo(Review::class);
+    public function reviewsByRate(){
+
+        return $this->belongsTo(Review::class, 'review_id');
     }
 
 }

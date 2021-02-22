@@ -13,36 +13,14 @@ class ReviewController extends Controller
 {
     public function __construct(){
 
-        $this->middleware('auth', ['except' => ['index', 'searchBar', 'getByRate']]);
+        $this->middleware('auth', ['except' => ['index', 'searchBar', 'displayByRate']]);
     }
     public function index(){
         $reviews = Review::all();
-        foreach ($reviews as $item){
-//            dd($item->id);
-        }
-        $rates = Rating::with('rewiewsByRate')->get();
-//        dd($rates);
-
-        foreach ($rates as $item){
-            foreach ($reviews as $item2){
-                if($item->review_id == $item2->id){
-                    $item->rating += $item->rating;
-                }
-//                dd($item->rating);
-            }
-        }
 
         $ratio = Review::with('ratings')->get();
-        foreach ($ratio as $item){
-            $item->ratings()->get('rating');
-            foreach ($item->ratings()->get('rating') as $i){
-//              dd($i);
-            }
-        }
 
         $genders = Gender::all();
-        $finalrates = Finalrate::all();
-
         $specArray =[];
         foreach ($reviews as $item){
             array_push($specArray, $item->spec);
@@ -61,8 +39,10 @@ class ReviewController extends Controller
         }
         $cityArray = array_unique($cityArray);
 
-        return view('reviews', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders', 'finalrates'));
+        return view('reviews', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders'));
     }
+
+
 
     public function store(Request $request){
         $validateData = $request->validate([
@@ -97,47 +77,7 @@ class ReviewController extends Controller
         ]);
         return redirect('/');
     }
-    public function storeFinalRate(){
-        Finalrate::create([
-            'finalrate'=>request('finalrate'),
-            'finalreview'=>request('finalreview')
-        ]);
-        return redirect('/');
-    }
-    public function getByRate(Finalrate $finalrate){
-            $reviews = DB::table('finalrates')
-                ->join('reviews', 'finalrates.finalreview', '=', 'reviews.id')
-                ->select('reviews.id', 'reviews.name', 'reviews.spec', 'reviews.service', 'reviews.city','reviews.image', 'finalrates.finalrate')
-                ->where('finalrates.finalreview', $finalrate->finalreview)
-                ->get();
-//            dd($reviews);
-        $ratio = Review::with('ratings')->get();
-        $finalrates = Finalrate::all();
 
-        $reviewsForNav = Review::all();
-        $specArray =[];
-        foreach ($reviewsForNav as $item){
-            array_push($specArray, $item->spec);
-        }
-        $specArray = array_unique($specArray);
-
-        $serviceArray = [];
-        foreach ($reviewsForNav as $item){
-            array_push($serviceArray, $item->service);
-        }
-        $serviceArray = array_unique($serviceArray);
-
-        $cityArray = [];
-        foreach ($reviewsForNav as $item){
-            array_push($cityArray, $item->city);
-        }
-        $cityArray = array_unique($cityArray);
-
-        $genders = Gender::all();
-
-
-        return view('reviewbyfinal', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders', 'finalrates'));
-    }
 
     public function storeGender(){
         Gender::create([
@@ -148,17 +88,50 @@ class ReviewController extends Controller
         return redirect('/home');
     }
 
+    public function displayByRate(){
+        $reviews = Review::whereHas('ratings', function ($query) {
+            return $query->where('rating', request('rating'));
+        })->get();
+
+        $ratio = Review::with('ratings')->get();
+        $reviewsForNav = Review::all();
+        $specArray =[];
+        foreach ($reviewsForNav as $item){
+            array_push($specArray, $item->spec);
+        }
+        $specArray = array_unique($specArray);
+
+        $serviceArray = [];
+        foreach ($reviewsForNav as $item){
+            array_push($serviceArray, $item->service);
+        }
+        $serviceArray = array_unique($serviceArray);
+
+        $cityArray = [];
+        foreach ($reviewsForNav as $item){
+            array_push($cityArray, $item->city);
+        }
+        $cityArray = array_unique($cityArray);
+
+        $genders = Gender::all();
+
+        return view('reviewby', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders'));
+    }
+
+
+
     public function searchBar(Request $request){
         $reviews = Review::where('name', 'LIKE', '%'.request('search').'%')
             ->where('city', 'LIKE', '%'.request('city').'%')
             ->where('service', 'LIKE' ,'%'.request('service').'%' )
             ->where('spec', 'LIKE' ,'%'.request('spec').'%' )
-            ->where('gender_id', 'LIKE' ,'%'.request('gender').'%' )->get();
+            ->where('gender_id', 'LIKE' ,'%'.request('gender').'%' )
+           ->get();
 //
 
 
         $ratio = Review::with('ratings')->get();
-        $finalrates = Finalrate::all();
+
 
         $reviewsForNav = Review::all();
         $specArray =[];
@@ -181,7 +154,7 @@ class ReviewController extends Controller
 
         $genders = Gender::all();
 
-        return view('reviewby', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders', 'finalrates'));
+        return view('reviewby', compact('reviews', 'ratio', 'specArray', 'serviceArray', 'cityArray', 'genders'));
     }
 
 

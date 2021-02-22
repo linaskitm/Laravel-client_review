@@ -28,3 +28,4 @@ Route::get('/', 'ReviewController@index');
 
 Route::get('/search', 'ReviewController@searchBar');
 Route::get('/getbyrate/{finalrate}', 'ReviewController@getByRate');
+Route::get('/displayrate', 'ReviewController@displayByRate');

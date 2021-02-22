@@ -16,7 +16,7 @@ class CreateFinalratesTable extends Migration
         Schema::create('finalrates', function (Blueprint $table) {
             $table->id();
             $table->double('finalrate');
-            $table->integer('finalreview');
+            $table->integer('review_id');
             $table->timestamps();
         });
     }

@@ -1,7 +1,7 @@
 <form action="/search">
     <div class="row">
         <div class="col-md-2">
-            <input class="form-control form-control-sm" type="search" name="search" value="">
+            <input class="form-control form-control-sm" type="search" name="search" value="" placeholder="Search">
         </div>
 
         <div class="col-md-2 col-2">
@@ -40,24 +40,29 @@
             </select>
         </div>
 
-
         <div class="col-md-2 col-2">
-            <button type="submit" class="w-100 btn btn-sm bg-blue">Search</button>
+            <button type="submit" class="btn btn-outline-secondary btn-sm">Search</button>
+        </div>
+    </div>
+</form>
+<form action="/displayrate">
+    <div class="row pt-2" >
+    <div class="col-md-2 col-2">
+        <select name="rating" class="form-control form-control-sm">
+            <option value="" selected disabled>Select by ratings</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+
+    </div>
+        <div class="col-md-2 col-2">
+            <button type="submit" class="btn btn-outline-secondary btn-sm ">Get by rate</button>
         </div>
     </div>
 </form>
 
 
-<div class="row pt-2">
-    <div class="col-md-1 col-1">
-        <ul class="list-group">
-            @foreach($finalrates as $finalrate)
 
-                <li class="list-group-item "><a class="text-muted" href="/getbyrate/{{$finalrate->id}}">{{$finalrate->finalrate}} <i class="fas fa-star text-warning"> </i></a></li>
-
-            @endforeach
-
-        </ul>
-    </div>
-
-</div>
