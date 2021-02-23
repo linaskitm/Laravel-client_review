@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Finalrate;
 use App\Gender;
 use App\Rating;
+use App\User;
+use Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Review;
@@ -67,14 +69,23 @@ class ReviewController extends Controller
         ]);
         return redirect('/');
     }
+    public function delete(Review $review){
+        If(Gate::allows('delete', $review)){
+            $review->delete();
+        }
 
+        return redirect('/');
+
+    }
 
     public function storeRating(){
-        Rating::create([
-           'rating'=>request('rating'),
-            'review_id'=> request('review_id'),
-           'user_id'=> Auth::id()
-        ]);
+
+                    Rating::create([
+                        'rating'=>request('rating'),
+                        'review_id'=> request('review_id'),
+                        'user_id'=> Auth::id()
+                    ]);
+
         return redirect('/');
     }
 

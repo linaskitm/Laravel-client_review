@@ -18,7 +18,7 @@
                         @foreach($ratio as $item)
                             @if($review->id == $item->id)
 
-                                {{$item->ratings()->avg('rating')}}
+                                {{number_format($item->ratings()->avg('rating'), 1) }}
 
                                     @for ($i = 0; $i < 5; $i++)
                                         @if (floor($item->ratings()->avg('rating')) - $i >= 1)
@@ -33,8 +33,6 @@
                                         @endif
                                     @endfor
                                 ({{$item->ratings()->get()->count()}})
-
-
                             @endif
                         @endforeach
                     </p>
@@ -57,6 +55,7 @@
                             </div>
 
                         </form>
+                        <button class="btn  btn-danger btn-sm"><a href="/delete/{{$review->id}}"> Delete</a></button>
                     @endif
                 </div>
 
